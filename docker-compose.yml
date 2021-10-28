@@ -1,0 +1,38 @@
+version: '3'
+
+networks:
+  curlup:
+    driver: bridge
+
+services:
+  movie-nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./:/var/www/html/
+      - ./dockerfiles/nginx.conf:/etc/nginx/conf.d/curlup.conf
+    links:
+      - curlup-php
+    networks:
+      - curlup
+  movie-php:
+    build:
+      context: ./
+      dockerfile: dockerfiles/php.Dockerfile
+    image: php:7.4-fpm
+    volumes:
+      - ./:/var/www/html/
+    networks:
+      - curlup
+  movie-mysql:
+    image: mysql:latest
+    networks:
+      - curlup
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "secret"
+      MYSQL_DATABASE: "movie"
+      MYSQL_USER: "movie"
+      MYSQL_PASSWORD: "secret"
