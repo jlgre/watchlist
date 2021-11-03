@@ -36,3 +36,8 @@ services:
       MYSQL_DATABASE: "movie"
       MYSQL_USER: "movie"
       MYSQL_PASSWORD: "secret"
+    volumes:
+      - movie-mysql-volume:/var/lib/mysql
+
+volumes:
+  movie-mysql-volume:
